@@ -1,0 +1,35 @@
+<?php
+// Recibir datos de la actualización
+$update = json_decode(file_get_contents('php://input'), true);
+$message = $update['message'];
+$chatId = $message['chat']['id'];
+$userMessage = strtolower($message['text']);
+
+// Definir productos y sus pasillos correspondientes
+$productos = array(
+    "carne" => "Pasillo 1",
+    "queso" => "Pasillo 1",
+    "jamón" => "Pasillo 1",
+    "leche" => "Pasillo 2",
+    "yogurth" => "Pasillo 2",
+    "cereal" => "Pasillo 2",
+    "bebidas" => "Pasillo 3",
+    "jugos" => "Pasillo 3",
+    "pan" => "Pasillo 4",
+    "pasteles" => "Pasillo 4",
+    "tortas" => "Pasillo 4",
+    "detergente" => "Pasillo 5",
+    "lavaloza" => "Pasillo 5"
+);
+
+// Verificar si el producto está en el arreglo y enviar respuesta
+if (isset($productos[$userMessage])) {
+    $response = "El producto '$userMessage' se encuentra en el " . $productos[$userMessage] . ".";
+} else {
+    $response = "Lo siento, no entiendo la pregunta.";
+}
+
+// Enviar respuesta al chat
+$parameters = array('chat_id' => $chatId, 'text' => $response);
+$parameters["method"] = "sendMessage";
+echo json_encode($parameters);
